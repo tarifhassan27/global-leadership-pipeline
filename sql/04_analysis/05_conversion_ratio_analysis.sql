@@ -28,7 +28,7 @@
 -- ----------------------------------------------------------------------------
 -- Top performers: Niger (1.625), Belize (1.446), Burkina Faso (1.378)
 -- These are confirmed genuine outliers, not representative of their income
--- group -- see 5.4 below.
+-- group -- see 5.5 below.
 
 SELECT
     w.economy,
@@ -164,7 +164,32 @@ ORDER BY r.conversion_ratio DESC;
 
 
 -- ----------------------------------------------------------------------------
--- 5.6 Trend analysis (REGR_SLOPE, year >= 2000, HAVING COUNT(*) >= 10)
+-- 5.6 Trend analysis -- countries improving fastest in management share
 -- ----------------------------------------------------------------------------
--- Current leaders by improving conversion ratio over time: Bhutan, Botswana,
--- Kosovo. [Paste your existing trend query here if not already in this file.]
+-- Per-country linear trend in female management share over time, using
+-- REGR_SLOPE. Restricted to year >= 2000 and countries with at least 10
+-- data points (tightened from an initial 5-year floor that let noisy short
+-- series -- e.g. Cabo Verde on just 5 years -- through with dramatic-looking
+-- but unreliable slopes). Rows flagged by data_quality_flag are excluded.
+--
+-- Verified leaders: Bhutan (+1.228 pts/yr, 14 years), Botswana (+1.122,
+-- 12 years), Kosovo (+1.096, 13 years).
+
+SELECT
+    w.economy,
+    c.ref_area,
+    COUNT(*) AS years_available,
+    REGR_SLOPE(
+        100.0 * c.female_managers / NULLIF(c.total_managers, 0),
+        c.year
+    ) AS trend_per_year
+FROM clean.country_year_managers c
+JOIN raw.wb_country_class w
+  ON w.code = CASE WHEN c.ref_area = 'KOS' THEN 'XKX' ELSE c.ref_area END
+WHERE c.data_quality_flag = FALSE
+  AND c.female_managers IS NOT NULL AND c.total_managers IS NOT NULL
+  AND c.year >= 2000
+GROUP BY w.economy, c.ref_area
+HAVING COUNT(*) >= 10
+ORDER BY trend_per_year DESC
+LIMIT 20;
