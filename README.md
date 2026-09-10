@@ -5,9 +5,13 @@ Women are often well-represented in national workforces — but does that presen
 
 Public dataset (ILOSTAT / World Bank) · PostgreSQL / SQL analysis · Personal portfolio project
 
+![Cover](doc-images/Cover.png)
+
 ---
 
 ## The Question & Method
+
+![Question and Method](doc-images/The%20Question%20%26%20Method.png)
 
 **Conversion ratio = female manager share ÷ female employment share.**
 
@@ -18,6 +22,8 @@ Each country uses its own most recent available clean data year rather than a si
 The raw data spans three ISCO occupational-classification vintages. **ISCO-68 was excluded entirely** — it conflates managers with armed forces personnel, which would silently distort the manager counts. After exclusion, 5,315 usable country-years remain across 190 countries.
 
 ## The Finding
+
+![Headline Finding](doc-images/Headline%20Finding.png)
 
 **115 of 190 countries (60.5%) show high female workforce participation paired with poor conversion into management** — the core decoupling pattern this project set out to test for.
 
@@ -34,11 +40,15 @@ High-income economies underconvert at nearly double the rate of every other inco
 
 ## The Ranking
 
+![Ranking](doc-images/The%20Ranking.png)
+
 The highest conversion ratios in the dataset: **Niger (1.625), Belize (1.446), Burkina Faso (1.378), Sudan (1.357), Liberia (1.062), Malawi (1.05)**.
 
 These are genuine outliers, not a representative pattern. Within the low-income group as a whole, **17 of 22 countries still underconvert** (ratio below 1.0), several sharply — Afghanistan (0.261), Guinea-Bissau (0.4). The group median sits close to every other income band. The five countries above 1.0 shouldn't be read as evidence that low-income economies convert better in general; they're exceptions against a group that, like the rest of the world, mostly underconverts.
 
 ## The Verdict
+
+![Verdict](doc-images/The%20Verdict.png)
 
 **Participation isn't converting into power — least of all in wealthy economies.** Across 190 countries, workforce presence and management representation are decoupled for 60.5% of the world, and the decoupling is worst in high-income economies rather than best, as the intuitive prior might suggest.
 
