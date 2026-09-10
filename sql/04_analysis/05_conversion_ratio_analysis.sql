@@ -146,7 +146,7 @@ ORDER BY r.conversion_ratio ASC;
 -- ----------------------------------------------------------------------------
 -- Confirms Niger, Burkina Faso, and Sudan are genuine outliers (ratio > 1.0)
 -- against a low-income group where the median country still underconverts.
--- 16 of 22 low-income countries sit below 1.0, several far below
+-- 17 of 22 low-income countries sit below 1.0, several far below
 -- (Afghanistan 0.261, Guinea-Bissau 0.4). These three should not be read as
 -- representative of low-income economies generally.
 
