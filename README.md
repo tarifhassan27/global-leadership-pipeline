@@ -5,13 +5,15 @@ Women are often well-represented in national workforces — but does that presen
 
 Public dataset (ILOSTAT / World Bank) · PostgreSQL / SQL analysis · Personal portfolio project
 
-![Cover](doc-images/Cover.png)
+![Slide 1](04_executive_brief/slides/slide_1.png)
 
----
+## Business problem
+
+Female workforce participation is a common headline measure of gender equity. But participation only measures who is in the workforce — it says nothing about whether that presence converts into management roles. If the two are decoupled, the headline measure hides the problem: getting more women into the workforce will not, on its own, change who holds management roles. Full framing in [`01_business_problem/problem_statement.md`](01_business_problem/problem_statement.md).
 
 ## The Question & Method
 
-![Question and Method](doc-images/The%20Question%20%26%20Method.png)
+![Slide 2](04_executive_brief/slides/slide_2.png)
 
 **Conversion ratio = female manager share ÷ female employment share.**
 
@@ -23,7 +25,7 @@ The raw data spans three ISCO occupational-classification vintages. **ISCO-68 wa
 
 ## The Finding
 
-![Headline Finding](doc-images/Headline%20Finding.png)
+![Slide 3](04_executive_brief/slides/slide_3.png)
 
 **115 of 190 countries (60.5%) show high female workforce participation paired with poor conversion into management** — the core decoupling pattern this project set out to test for.
 
@@ -40,7 +42,7 @@ High-income economies underconvert at nearly double the rate of every other inco
 
 ## The Ranking
 
-![Ranking](doc-images/The%20Ranking.png)
+![Slide 4](04_executive_brief/slides/slide_4.png)
 
 The highest conversion ratios in the dataset: **Niger (1.625), Belize (1.446), Burkina Faso (1.378), Sudan (1.357), Liberia (1.062), Malawi (1.05)**.
 
@@ -48,7 +50,7 @@ These are genuine outliers, not a representative pattern. Within the low-income 
 
 ## The Verdict
 
-![Verdict](doc-images/The%20Verdict.png)
+![Slide 5](04_executive_brief/slides/slide_5.png)
 
 **Participation isn't converting into power — least of all in wealthy economies.** Across 190 countries, workforce presence and management representation are decoupled for 60.5% of the world, and the decoupling is worst in high-income economies rather than best, as the intuitive prior might suggest.
 
@@ -58,11 +60,11 @@ These are genuine outliers, not a representative pattern. Within the low-income 
 
 Everything in this repo is real, reproducible SQL work against public data — nothing here is simulated or estimated.
 
-- **`sql/00_setup/`** — schema creation (`raw` and `clean` schemas in the `leadership_pipeline` database)
-- **`sql/01_load/`** — loading three raw landing tables: `raw.emp_sex_occupation` (ILOSTAT employment by sex/occupation, 227,664 rows), `raw.sdg_women_managers` (ILO's own published SDG 5.5.2 figure, 1,823 rows), and `raw.wb_country_class` (World Bank region/income classification, 268 rows)
-- **`sql/02_audit/`** — full data-quality audit: 6,228 total country-years, 292 (4.7%) excluded for ISCO-68-only reporting, leaving 5,315 usable country-years across 294 ILOSTAT codes; 196 identified as the real matched analysis universe against World Bank country codes; zero integrity violations (female counts never exceed total counts)
-- **`sql/03_clean/`** — `clean.country_year_managers` built with a corrected `OCU_` classification-code prefix (a first-pass bug that silently NULLed every manager figure); reconciled against ILO's own published figures; added a `data_quality_flag` column marking 101 of 2,958 rows (3.4%) showing >30-point swings between manager-share and employment-share ratios, retained but excluded from headline analysis
-- **`sql/04_analysis/`** — the core equity analysis: conversion ratio rankings, the income-group decoupling breakdown, two validation checks (confirming the high-income poor-conversion group is broad-based, and confirming the low-income outliers aren't representative), and trend analysis using `REGR_SLOPE()` (fastest-improving countries: Bhutan, Botswana, Kosovo)
+- **Setup — [`03_sql/01_create_schemas.sql`](03_sql/01_create_schemas.sql)** — schema creation (`raw` and `clean` schemas in the `leadership_pipeline` database)
+- **Load** — loading three raw landing tables: `raw.emp_sex_occupation` (ILOSTAT employment by sex/occupation, 227,664 rows), `raw.sdg_women_managers` (ILO's own published SDG 5.5.2 figure, 1,823 rows), and `raw.wb_country_class` (World Bank region/income classification, 268 rows)
+- **Audit** — full data-quality audit: 6,228 total country-years, 292 (4.7%) excluded for ISCO-68-only reporting, leaving 5,315 usable country-years across 294 ILOSTAT codes; 196 identified as the real matched analysis universe against World Bank country codes; zero integrity violations (female counts never exceed total counts)
+- **Clean — [`03_sql/04_build_clean_managers.sql`](03_sql/04_build_clean_managers.sql)** — `clean.country_year_managers` built with a corrected `OCU_` classification-code prefix (a first-pass bug that silently NULLed every manager figure); reconciled against ILO's own published figures; added a `data_quality_flag` column marking 101 of 2,958 rows (3.4%) showing >30-point swings between manager-share and employment-share ratios, retained but excluded from headline analysis
+- **Analysis — [`03_sql/05_conversion_ratio_analysis.sql`](03_sql/05_conversion_ratio_analysis.sql)** — the core equity analysis: conversion ratio rankings, the income-group decoupling breakdown, two validation checks (confirming the high-income poor-conversion group is broad-based, and confirming the low-income outliers aren't representative), and trend analysis using `REGR_SLOPE()` (fastest-improving countries: Bhutan, Botswana, Kosovo)
 
 **Two real bugs caught and fixed along the way**, both documented inline in the SQL:
 - `raw.wb_country_class` initially loaded with `income_group` and `lending_category` 100% NULL — not a CSV issue, but a DBeaver import wizard silently creating two new quoted columns (`"Income group"`, `"Lending category"`) instead of mapping to the existing ones. Fixed by dropping the phantom columns and remapping the import explicitly.
@@ -72,7 +74,14 @@ Everything in this repo is real, reproducible SQL work against public data — n
 - [ILOSTAT bulk data](https://ilostat.ilo.org/data/) — employment by sex and occupation, and the SDG 5.5.2 indicator
 - [World Bank country and lending group classifications](https://datahelpdesk.worldbank.org/knowledgebase/articles/906519)
 
-**Full presentation deck:** [`deck/Global_Leadership_Pipeline.pdf`](deck/Global_Leadership_Pipeline.pdf)
+**Full presentation deck:** [`04_executive_brief/Global_Leadership_Pipeline.pdf`](04_executive_brief/Global_Leadership_Pipeline.pdf)
+
+## Repo structure
+
+- `01_business_problem/` — the business framing and the question
+- `02_data/` — data sources, raw table inventory, and data-quality notes (raw files excluded via `.gitignore`)
+- `03_sql/` — setup, clean-table build, and analysis scripts, run in order
+- `04_executive_brief/` — the presentation deck (PDF + individual slide images)
 
 **Tools:** PostgreSQL 18, DBeaver, Git
 
