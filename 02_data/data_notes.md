@@ -24,8 +24,10 @@ Created in [`03_sql/01_create_schemas.sql`](../03_sql/01_create_schemas.sql)
 ## Data-quality notes
 
 - **ISCO-68 excluded entirely.** It conflates managers with armed forces
-  personnel, which would silently distort the manager counts. 292 of
-  6,228 country-years (4.7%) were ISCO-68-only and excluded.
+  personnel, which would silently distort the manager counts. Of 6,228
+  country-years, 5,315 are usable (ISCO-08 or ISCO-88 available) and 292
+  (4.7%) are ISCO-68-only and excluded. Audit queries in
+  [`03_sql/03_audit_raw_data.sql`](../03_sql/03_audit_raw_data.sql).
 - **`data_quality_flag`.** 101 of 2,958 rows (3.4%) in
   `clean.country_year_managers` show >30-point swings between
   manager-share and employment-share ratios; retained but excluded from

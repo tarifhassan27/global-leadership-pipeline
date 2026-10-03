@@ -96,3 +96,16 @@ WHERE female_managers IS NOT NULL AND total_managers IS NOT NULL
 SELECT COUNT(*) AS flagged_rows
 FROM clean.country_year_managers
 WHERE data_quality_flag = TRUE;
+
+-- Step 7: latest clean year per country
+-- One row per country: its most recent year that is not quality-flagged
+-- and has manager figures.
+CREATE OR REPLACE VIEW clean.v_latest_clean_year AS
+SELECT DISTINCT ON (ref_area)
+    ref_area, year, isco_version,
+    female_employment, total_employment, female_managers, total_managers
+FROM clean.country_year_managers
+WHERE data_quality_flag = FALSE
+  AND female_managers IS NOT NULL
+  AND total_managers IS NOT NULL
+ORDER BY ref_area, year DESC;

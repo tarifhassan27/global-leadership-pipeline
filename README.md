@@ -62,7 +62,7 @@ Everything in this repo is real, reproducible SQL work against public data — n
 
 - **Setup — [`03_sql/01_create_schemas.sql`](03_sql/01_create_schemas.sql)** — schema creation (`raw` and `clean` schemas in the `leadership_pipeline` database)
 - **Load** — loading three raw landing tables: `raw.emp_sex_occupation` (ILOSTAT employment by sex/occupation, 227,664 rows), `raw.sdg_women_managers` (ILO's own published SDG 5.5.2 figure, 1,823 rows), and `raw.wb_country_class` (World Bank region/income classification, 268 rows)
-- **Audit** — full data-quality audit: 6,228 total country-years, 292 (4.7%) excluded for ISCO-68-only reporting, leaving 5,315 usable country-years across 294 ILOSTAT codes; 196 identified as the real matched analysis universe against World Bank country codes; zero integrity violations (female counts never exceed total counts)
+- **Audit — [`03_sql/03_audit_raw_data.sql`](03_sql/03_audit_raw_data.sql)** — full data-quality audit: 6,228 total country-years, of which 5,315 are usable (ISCO-08 or ISCO-88 available) across 294 ILOSTAT codes and 292 (4.7%) are ISCO-68-only and excluded; 196 identified as the real matched analysis universe against World Bank country codes; zero integrity violations (female counts never exceed total counts)
 - **Clean — [`03_sql/04_build_clean_managers.sql`](03_sql/04_build_clean_managers.sql)** — `clean.country_year_managers` built with a corrected `OCU_` classification-code prefix (a first-pass bug that silently NULLed every manager figure); reconciled against ILO's own published figures; added a `data_quality_flag` column marking 101 of 2,958 rows (3.4%) showing >30-point swings between manager-share and employment-share ratios, retained but excluded from headline analysis
 - **Analysis — [`03_sql/05_conversion_ratio_analysis.sql`](03_sql/05_conversion_ratio_analysis.sql)** — the core equity analysis: conversion ratio rankings, the income-group decoupling breakdown, two validation checks (confirming the high-income poor-conversion group is broad-based, and confirming the low-income outliers aren't representative), and trend analysis using `REGR_SLOPE()` (fastest-improving countries: Bhutan, Botswana, Kosovo)
 
@@ -80,7 +80,7 @@ Everything in this repo is real, reproducible SQL work against public data — n
 
 - `01_business_problem/` — the business framing and the question
 - `02_data/` — data sources, raw table inventory, and data-quality notes (raw files excluded via `.gitignore`)
-- `03_sql/` — setup, clean-table build, and analysis scripts, run in order
+- `03_sql/` — setup, raw-data audit, clean-table build, and analysis scripts, run in order
 - `04_executive_brief/` — the presentation deck (PDF + individual slide images)
 
 **Tools:** PostgreSQL 18, DBeaver, Git
